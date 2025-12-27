@@ -1,0 +1,14 @@
+[Unit]
+Description=Wedding Camera Slideshow Flask App
+After=network.target
+
+[Service]
+User=picamera
+Group=picamera
+WorkingDirectory=/home/picamera/pi_wedding_camera
+Environment="PATH=/home/picamera/pi_wedding_camera/venv/bin"
+ExecStart=/home/picamera/pi_wedding_camera/venv/bin/gunicorn --workers 3 --bind 0.0.0.0:8000 app:app
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
