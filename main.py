@@ -55,34 +55,22 @@ def take_photo(save_dir):
         "-o",
         filepath,
         "-t",
-        "500",  # 500ms warmup - minimal for fast capture
-        "--nopreview",
-        # 3MP resolution (2304x1296) - good quality, much faster than 12MP
-        # Still excellent for prints up to 8x10 inches
+        "1",  # Minimum timeout - capture immediately
+        "-n",  # nopreview shorthand
+        # 3MP resolution - good quality, fast processing
         "--width",
         "2304",
         "--height",
         "1296",
-        # Quality settings for best output
         "--quality",
-        "100",  # Maximum JPEG quality
-        # Fast image processing
+        "95",  # Slightly reduced for faster encoding
+        # Minimal processing
         "--denoise",
-        "cdn_off",  # Disable denoise for speed and detail
-        "--sharpness",
-        "1.0",
-        "--saturation",
-        "1.05",
-        # Auto white balance and exposure
-        "--awb",
-        "auto",
-        "--metering",
-        "centre",
-        # Fast autofocus - use continuous mode for speed
+        "off",  # Fully disable denoise
+        # Fast continuous autofocus
         "--autofocus-mode",
         "continuous",
-        # Immediate capture after focus acquired
-        "--immediate",
+        "--immediate",  # Don't wait for timeout
     ]
 
     # Adapt flags for legacy raspistill if necessary
