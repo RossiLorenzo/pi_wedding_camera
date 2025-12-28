@@ -1,1 +1,17 @@
-.agent/rules/test-and-deploy.md
+# Secrets and tokens - DO NOT COMMIT
+token.json
+client_secret*.json
+album_id.txt
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+venv/
+.env
+
+# Agent/IDE files
+.agent/
+
+# OS files
+.DS_Store

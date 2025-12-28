@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Live Wedding Photos</title>
+    <title>Fliss&Lorenzo WeddingCam</title>
     <style>
         body, html {
             margin: 0;
@@ -40,7 +40,7 @@
             opacity: 1;
             z-index: 2;
         }
-        
+
         .slide.inactive {
             z-index: 1;
         }
@@ -55,7 +55,7 @@
             letter-spacing: 1px;
             z-index: 10;
         }
-        
+
         #watermark {
             position: absolute;
             bottom: 20px;
@@ -72,7 +72,7 @@
         <div id="loading">Waiting for photos...</div>
         <img id="slide1" class="slide" src="" alt="">
         <img id="slide2" class="slide" src="" alt="">
-        <div id="watermark">Wedding Cam</div>
+        <div id="watermark">Fliss&Lorenzo WeddingCam</div>
     </div>
 
     <script>
@@ -81,7 +81,7 @@
         let slideInterval;
         let activeSlideId = 'slide1';
         let inactiveSlideId = 'slide2';
-        
+
         const SLIDE_DURATION = 5000; // 5 seconds
         const POLL_INTERVAL = 5000;  // Check for new photos every 5 seconds
 
@@ -116,25 +116,25 @@
 
         function showImage(index) {
             if (index >= images.length) return;
-            
+
             const filename = images[index];
             const url = `/images/${filename}`;
-            
+
             const activeEl = document.getElementById(activeSlideId);
             const inactiveEl = document.getElementById(inactiveSlideId);
-            
+
             // Prepare the inactive element (next slide)
             inactiveEl.src = url;
-            
+
             inactiveEl.onload = () => {
                 // Fade in new
                 inactiveEl.classList.add('active');
                 inactiveEl.classList.remove('inactive');
-                
+
                 // Fade out old
                 activeEl.classList.remove('active');
                 activeEl.classList.add('inactive');
-                
+
                 // Swap roles
                 [activeSlideId, inactiveSlideId] = [inactiveSlideId, activeSlideId];
             };
@@ -142,7 +142,7 @@
 
         function nextSlide() {
             if (images.length <= 1) return; // Don't cycle if 0 or 1 image
-            
+
             currentIndex = (currentIndex + 1) % images.length;
             showImage(currentIndex);
         }
