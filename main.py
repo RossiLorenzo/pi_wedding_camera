@@ -55,38 +55,34 @@ def take_photo(save_dir):
         "-o",
         filepath,
         "-t",
-        "1000",  # 1 second warmup - fast capture for handheld use
+        "500",  # 500ms warmup - minimal for fast capture
         "--nopreview",
-        # Full resolution for IMX708 (Camera Module 3) = 4608x2592
-        # This gives maximum detail for wedding photos
+        # 3MP resolution (2304x1296) - good quality, much faster than 12MP
+        # Still excellent for prints up to 8x10 inches
         "--width",
-        "4608",
+        "2304",
         "--height",
-        "2592",
+        "1296",
         # Quality settings for best output
         "--quality",
-        "100",  # Maximum JPEG quality for wedding photos
-        # Image processing tuning
+        "100",  # Maximum JPEG quality
+        # Fast image processing
         "--denoise",
-        "cdn_off",  # Disable colour denoise to preserve detail
+        "cdn_off",  # Disable denoise for speed and detail
         "--sharpness",
-        "1.0",  # Natural sharpness (avoid over-sharpening)
-        "--contrast",
-        "1.0",  # Natural contrast
+        "1.0",
         "--saturation",
-        "1.05",  # Slightly boost colors for vibrant wedding photos
+        "1.05",
         # Auto white balance and exposure
         "--awb",
         "auto",
         "--metering",
-        "centre",  # Centre-weighted for portrait-style photos
-        # Autofocus settings
+        "centre",
+        # Fast autofocus - use continuous mode for speed
         "--autofocus-mode",
-        "auto",
-        "--autofocus-on-capture",
-        # Metadata
-        "--exif",
-        "EXIF.Photo.UserComment=Wedding Camera",
+        "continuous",
+        # Immediate capture after focus acquired
+        "--immediate",
     ]
 
     # Adapt flags for legacy raspistill if necessary
