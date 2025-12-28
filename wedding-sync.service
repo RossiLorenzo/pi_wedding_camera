@@ -1,0 +1,14 @@
+[Unit]
+Description=Wedding Camera Sync Service
+After=network.target
+
+[Service]
+Type=simple
+User=picamera
+WorkingDirectory=/home/picamera/pi_wedding_camera
+ExecStart=/home/picamera/pi_wedding_camera/venv/bin/python /home/picamera/pi_wedding_camera/sync_service.py
+Restart=always
+RestartSec=10
+
+[Install]
+WantedBy=multi-user.target

@@ -1,9 +1,8 @@
 import os
-import time
-import subprocess
 import shutil
+import subprocess
 from datetime import datetime
-from uploader import GooglePhotosUploader
+
 
 def take_photo(save_dir):
     """
@@ -39,34 +38,44 @@ def take_photo(save_dir):
         camera_cmd = "raspistill"
 
     if not camera_cmd:
-        print("Error: No suitable camera command found (rpicam-still, libcamera-still, or raspistill).")
+        print(
+            "Error: No suitable camera command found (rpicam-still, libcamera-still, or raspistill)."
+        )
         return None
 
     print(f"Using camera command: {camera_cmd}")
 
     # specific flags might need adjustment for raspistill vs libcamera
-    # For simplicity, we assume libcamera/rpicam syntax mostly. 
-    # raspistill uses similar syntax for -o and -t, but --nopreview is -n. 
+    # For simplicity, we assume libcamera/rpicam syntax mostly.
+    # raspistill uses similar syntax for -o and -t, but --nopreview is -n.
     # We will stick to libcamera syntax for now and add a basic fallback for raspistill if needed or just warn.
-    
+
     cmd = [
         camera_cmd,
-        "-o", filepath,
-        "-t", "2000",
+        "-o",
+        filepath,
+        "-t",
+        "2000",
         "--nopreview",
-        "--width", "1920",
-        "--height", "1080"
+        "--width",
+        "1920",
+        "--height",
+        "1080",
     ]
-    
+
     # Adapt flags for legacy raspistill if necessary
     if camera_cmd == "raspistill":
         cmd = [
             "raspistill",
-            "-o", filepath,
-            "-t", "2000",
-            "-n", # nopreview equivalent
-            "-w", "1920",
-            "-h", "1080"
+            "-o",
+            filepath,
+            "-t",
+            "2000",
+            "-n",  # nopreview equivalent
+            "-w",
+            "1920",
+            "-h",
+            "1080",
         ]
 
     try:
@@ -81,15 +90,15 @@ def take_photo(save_dir):
         print(f"Command '{camera_cmd}' failed to execute.")
         return None
 
+
 if __name__ == "__main__":
     # Path relative to the script: ../Pictures
     # We resolve it to absolute path to be safe
     script_dir = os.path.dirname(os.path.abspath(__file__))
     pictures_dir = os.path.abspath(os.path.join(script_dir, "..", "Pictures"))
-    
+
     photo_path = take_photo(pictures_dir)
-    
+
     if photo_path:
-        print("Attempting to upload to Google Photos...")
-        uploader = GooglePhotosUploader()
-        uploader.upload_photo(photo_path)
+        print(f"Photo saved: {photo_path}")
+        print("Photo will be synced to Google Photos when WiFi is available.")

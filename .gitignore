@@ -2,6 +2,7 @@
 token.json
 client_secret*.json
 album_id.txt
+sync_state.json
 
 # Python
 __pycache__/
