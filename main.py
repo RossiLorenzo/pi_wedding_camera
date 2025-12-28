@@ -3,6 +3,7 @@ import time
 import subprocess
 import shutil
 from datetime import datetime
+from uploader import GooglePhotosUploader
 
 def take_photo(save_dir):
     """
@@ -15,7 +16,7 @@ def take_photo(save_dir):
             print(f"Created directory: {save_dir}")
         except OSError as e:
             print(f"Error creating directory {save_dir}: {e}")
-            return
+            return None
 
     # Generate filename based on timestamp
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
@@ -39,7 +40,7 @@ def take_photo(save_dir):
 
     if not camera_cmd:
         print("Error: No suitable camera command found (rpicam-still, libcamera-still, or raspistill).")
-        return
+        return None
 
     print(f"Using camera command: {camera_cmd}")
 
@@ -72,10 +73,13 @@ def take_photo(save_dir):
         # Run the command
         subprocess.run(cmd, check=True)
         print("Photo taken successfully!")
+        return filepath
     except subprocess.CalledProcessError as e:
         print(f"Error taking photo: {e}")
+        return None
     except FileNotFoundError:
         print(f"Command '{camera_cmd}' failed to execute.")
+        return None
 
 if __name__ == "__main__":
     # Path relative to the script: ../Pictures
@@ -83,4 +87,9 @@ if __name__ == "__main__":
     script_dir = os.path.dirname(os.path.abspath(__file__))
     pictures_dir = os.path.abspath(os.path.join(script_dir, "..", "Pictures"))
     
-    take_photo(pictures_dir)
+    photo_path = take_photo(pictures_dir)
+    
+    if photo_path:
+        print("Attempting to upload to Google Photos...")
+        uploader = GooglePhotosUploader()
+        uploader.upload_photo(photo_path)
