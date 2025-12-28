@@ -6,8 +6,10 @@ from google.oauth2.credentials import Credentials
 from google_auth_oauthlib.flow import InstalledAppFlow
 
 # If modifying these scopes, delete the file token.json.
+# Using appendonly scope which allows uploading photos and creating albums
+# without requiring full photoslibrary access (which needs app verification)
 SCOPES = [
-    "https://www.googleapis.com/auth/photoslibrary",
+    "https://www.googleapis.com/auth/photoslibrary.appendonly",
     "https://www.googleapis.com/auth/photoslibrary.sharing",
 ]
 
@@ -62,13 +64,14 @@ def authenticate():
             print(f"If running headless, open browser on another device.")
             print(f"The redirect will go to localhost:8080 which is this Pi.\n")
 
-            # For headless Pi: bind to 0.0.0.0 so it's accessible from network
-            # open_browser=False since there's no browser on headless Pi
+            # Force consent prompt to ensure we get a refresh_token
+            # This is needed because Google only returns refresh_token on first consent
             creds = flow.run_local_server(
                 host="localhost",
                 port=8080,
                 open_browser=False,
                 success_message="Authentication successful! You can close this window.",
+                prompt="consent",
             )
 
         # Save the credentials for the next run
