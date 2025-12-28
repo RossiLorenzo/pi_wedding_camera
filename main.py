@@ -55,12 +55,38 @@ def take_photo(save_dir):
         "-o",
         filepath,
         "-t",
-        "2000",
+        "1000",  # 1 second warmup - fast capture for handheld use
         "--nopreview",
+        # Full resolution for IMX708 (Camera Module 3) = 4608x2592
+        # This gives maximum detail for wedding photos
         "--width",
-        "1920",
+        "4608",
         "--height",
-        "1080",
+        "2592",
+        # Quality settings for best output
+        "--quality",
+        "100",  # Maximum JPEG quality for wedding photos
+        # Image processing tuning
+        "--denoise",
+        "cdn_off",  # Disable colour denoise to preserve detail
+        "--sharpness",
+        "1.0",  # Natural sharpness (avoid over-sharpening)
+        "--contrast",
+        "1.0",  # Natural contrast
+        "--saturation",
+        "1.05",  # Slightly boost colors for vibrant wedding photos
+        # Auto white balance and exposure
+        "--awb",
+        "auto",
+        "--metering",
+        "centre",  # Centre-weighted for portrait-style photos
+        # Autofocus settings
+        "--autofocus-mode",
+        "auto",
+        "--autofocus-on-capture",
+        # Metadata
+        "--exif",
+        "EXIF.Photo.UserComment=Wedding Camera",
     ]
 
     # Adapt flags for legacy raspistill if necessary
@@ -70,12 +96,14 @@ def take_photo(save_dir):
             "-o",
             filepath,
             "-t",
-            "2000",
+            "1000",
             "-n",  # nopreview equivalent
             "-w",
             "1920",
             "-h",
             "1080",
+            "-q",
+            "100",
         ]
 
     try:
