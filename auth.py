@@ -1,5 +1,5 @@
 import os
-import sys
+import socket
 
 from google.auth.transport.requests import Request
 from google.oauth2.credentials import Credentials
@@ -10,6 +10,18 @@ SCOPES = [
     "https://www.googleapis.com/auth/photoslibrary",
     "https://www.googleapis.com/auth/photoslibrary.sharing",
 ]
+
+
+def get_local_ip():
+    """Get the local IP address of this machine."""
+    try:
+        s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        s.connect(("8.8.8.8", 80))
+        ip = s.getsockname()[0]
+        s.close()
+        return ip
+    except Exception:
+        return "localhost"
 
 
 def authenticate():
@@ -44,22 +56,20 @@ def authenticate():
             print(f"Using secret file: {secret_file}")
             flow = InstalledAppFlow.from_client_secrets_file(secret_file, SCOPES)
 
-            # Check if we're running on a headless system (no DISPLAY)
-            # Use console flow for headless systems like Raspberry Pi
-            if os.environ.get("DISPLAY") is None and sys.stdin.isatty():
-                print("\nHeadless system detected. Using console-based authentication.")
-                print(
-                    "You will need to open the URL on another device and paste the code here.\n"
-                )
-                creds = flow.run_console()
-            else:
-                # Try local server first, fall back to console if it fails
-                try:
-                    creds = flow.run_local_server(port=8080, open_browser=True)
-                except Exception as e:
-                    print(f"Local server failed: {e}")
-                    print("Falling back to console-based authentication.\n")
-                    creds = flow.run_console()
+            local_ip = get_local_ip()
+            print(f"\n=== OAuth Authentication ===")
+            print(f"Starting auth server on http://{local_ip}:8080")
+            print(f"If running headless, open browser on another device.")
+            print(f"The redirect will go to localhost:8080 which is this Pi.\n")
+
+            # For headless Pi: bind to 0.0.0.0 so it's accessible from network
+            # open_browser=False since there's no browser on headless Pi
+            creds = flow.run_local_server(
+                host="localhost",
+                port=8080,
+                open_browser=False,
+                success_message="Authentication successful! You can close this window.",
+            )
 
         # Save the credentials for the next run
         if creds:
